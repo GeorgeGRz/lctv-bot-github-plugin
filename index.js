@@ -3,7 +3,7 @@
 const https = require('https');
 const moment = require('moment');
 const StringDecoder = require('string_decoder').StringDecoder;
-const commitSummaryRegex = /^(!|\/)commits\ssummary\s(\d{1,2})$/;
+const commitSummaryRegex = /^(!|\/)commits\ssummary\s(\d{1})$/;
 const pluginSettings = require('./settings.json');
 
 /**
@@ -74,7 +74,7 @@ module.exports = [{
 	types: ['message'],
 	regex: commitSummaryRegex,
 	action: function( chat, stanza ) {
-		let numberOfWeeks = parseInt( commitSummaryRegex.exec( stanza.message )[2], 10 );
+		let numberOfWeeks = Math.min( 5, parseInt( commitSummaryRegex.exec( stanza.message )[2], 10 ) );
 		let numberOfDays = numberOfWeeks * 7;
 		let date = moment().subtract(numberOfWeeks, 'weeks');
 		let since = date.format('YYYY-MM-DDTHH:MM:SSZ');
